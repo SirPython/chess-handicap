@@ -8,7 +8,6 @@
  * 4. Calculate odds of winning
  */
 
-
 int main(int argc, char **argv) {
-
+    ipc(argv[1], uci_interface);
 }
