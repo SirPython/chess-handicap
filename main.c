@@ -9,5 +9,6 @@
  */
 
 int main(int argc, char **argv) {
+    puts("running");
     ipc(argv[1], uci_interface);
 }
