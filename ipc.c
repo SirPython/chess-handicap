@@ -20,7 +20,7 @@ void ipc(char *proc, ipc_handler handler) {
 
     subproc sub;
     sub.in = fds[0];
-    sub.out = fds[1];
+    sub.out = fds[3];
     handler(sub);
 
     kill(pid, SIGKILL);
@@ -32,15 +32,16 @@ void comm(subproc sub, char *send, char **recv) {
 
     if(*recv != NULL) {
         free(*recv);
+        *recv = NULL;
     }
 
     char buf[BUF_SIZE];
     size_t n_read, total_read = 0;
     do {
-        n_read = read(fd, &buf, BUF_SIZE);
+        n_read = read(sub.in, &buf, BUF_SIZE);
 
         *recv = realloc(*recv, total_read + n_read);
-        memcpy(*out + total_read, buf, n_read);
+        memcpy(*recv + total_read, buf, n_read);
 
         total_read += n_read;
     } while(n_read == BUF_SIZE);
