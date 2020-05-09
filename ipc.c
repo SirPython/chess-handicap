@@ -21,6 +21,7 @@ void ipc(char *proc, ipc_handler handler) {
 
     handler(fds[0], fds[3]);
 
+    puts("TERMINATING");
     kill(pid, SIGKILL);
     waitpid(pid, NULL, 0);
 }

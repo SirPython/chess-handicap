@@ -4,10 +4,24 @@ void uci_interface(int in, int out) {
     char *msg;
     int n = read_msg(in, &msg);
 
-    printf("Read %d bytes: %s", n, msg);
+    printf("1Read %d bytes: %s", n, msg);
+    free(msg);
+
+    n = read_msg(in, &msg);
+    printf("2Read %d bytes: %s", n, msg);
+    free(msg);
+
+    char buuf[256] = "uci";
+    write(out, buuf, strlen(buuf));
+    printf("just wrote");
+
+    n = read_msg(in, &msg);
+    printf("3Read %d bytes: %s", n, msg);
+    free(msg);
 }
 
 int read_msg(int fd, char **msg) {
+    /* Don't really matter what you initalize it to. */
     *msg = malloc(BUF_SIZE);
 
     char buf[BUF_SIZE];
