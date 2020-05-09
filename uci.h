@@ -17,6 +17,4 @@
  */
 int read_msg(int fd, char **msg);
 
-void uci_interface(int in, int out);
-
 #endif
