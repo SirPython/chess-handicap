@@ -3,14 +3,24 @@
 
 #include "chess-handicap.h"
 
-typedef void (*ipc_handler)(int[2]);
+typedef void (*ipc_handler)(subproc);
+
+typedef struct {
+    int in;
+    int out;
+} subproc;
 
 /**
  * https://stackoverflow.com/questions/6171552/popen-simultaneous-read-and-write
  */
 void ipc(char *proc, ipc_handler handler);
 
-void uci_interface(int io[2]);
+/**
+ * One function to handle communication with another process
+ *
+ * Message to send in *send, recieved messed to be put in **recv
+ */
+void comm(subproc sub, char *send, char **recv);
 
 
 #endif
