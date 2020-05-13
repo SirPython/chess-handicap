@@ -27,12 +27,14 @@ void ipc(char *proc, ipc_handler handler) {
     waitpid(pid, NULL, 0);
 }
 
-void comm(subproc sub, char *send, char **recv) {
-    write(sub.out, send, strlen(send));
+void send(subproc sub, char *msg) {
+    write(sub.out, msg, strlen(msg));
+}
 
-    if(*recv != NULL) {
-        free(*recv);
-        *recv = NULL;
+void recv(subproc sub, char **msg) {
+    if(*msg != NULL) {
+        free(*msg);
+        *msg = NULL;
     }
 
     char buf[BUF_SIZE];
@@ -40,12 +42,12 @@ void comm(subproc sub, char *send, char **recv) {
     do {
         n_read = read(sub.in, &buf, BUF_SIZE);
 
-        *recv = realloc(*recv, total_read + n_read);
-        memcpy(*recv + total_read, buf, n_read);
+        *msg = realloc(*msg, total_read + n_read);
+        memcpy(*msg + total_read, buf, n_read);
 
         total_read += n_read;
     } while(n_read == BUF_SIZE);
 
-    *recv = realloc(*recv, total_read + 1);
-    (*recv)[total_read] = '\0';
+    *msg = realloc(*msg, total_read + 1);
+    (*msg)[total_read] = '\0';
 }

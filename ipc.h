@@ -15,12 +15,8 @@ typedef void (*ipc_handler)(subproc);
  */
 void ipc(char *proc, ipc_handler handler);
 
-/**
- * One function to handle communication with another process
- *
- * Message to send in *send, recieved messed to be put in **recv
- */
-void comm(subproc sub, char *send, char **recv);
+void send(subproc sub, char *msg);
+void recv(subproc sub, char **msg);
 
 
 #endif
