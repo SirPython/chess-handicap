@@ -5,27 +5,26 @@ void uci_interface(subproc sub) {
 
     send(sub, "");
     recv(sub, &msg);
-    puts(msg);
-
     send(sub, "uci\n");
     recv(sub, &msg);
-    puts(msg);
-
     send(sub, "isready\n");
     recv(sub, &msg);
-    puts(msg);
-
     send(sub, "ucinewgame\n");
-    send(sub, "position startpos moves e2e4\n");
-    send(sub, "go wtime 122000 btime 120000 winc 2000 binc 2000\n");
-    recv(sub, &msg);
-    puts(msg);
-    recv(sub, &msg);
-    puts(msg);
-    recv(sub, &msg);
-    puts(msg);
-    recv(sub, &msg);
-    puts(msg);
-    recv(sub, &msg);
-    puts(msg);
+    send(sub, "position startpos\n");
+    send(sub, "go\n");
+
+    while(true) {
+        recv(sub, &msg);
+        if(msg[0] != 'b') {
+            continue;
+        }
+
+        printf("Result: %s\n", msg);
+        break;
+    }
+
+    // try this out
+    // maybe the engines can predict the odds from the beginning
+    // have them play some games and see if the odds line up
+    // if they do, then you don't need the engines to play a game to determine the odds
 }

@@ -28,6 +28,9 @@ void ipc(char *proc, ipc_handler handler) {
 }
 
 void send(subproc sub, char *msg) {
+    /*if(msg[strlen(msg) - 1] != '\n') {
+        puts("Warning: no newline");
+    }*/
     write(sub.out, msg, strlen(msg));
 }
 
