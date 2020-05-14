@@ -9,5 +9,34 @@
  */
 
 int main(int argc, char **argv) {
-    ipc(argv[1], uci_interface);
+    subproc sub;
+    load_ipc(argv[1], &sub);
+
+    char *msg = NULL;
+
+    recv(sub, &msg);
+    send(sub, "uci\n");
+    recv(sub, &msg);
+    send(sub, "isready\n");
+    recv(sub, &msg);
+    send(sub, "ucinewgame\n");
+    send(sub, "position startpos\n");
+    send(sub, "go\n");
+
+    bool cont = true;
+    while(cont) {
+        recv(sub, &msg);
+        char *line = strtok(msg, "\n");
+        while(line != NULL) {
+            if(line[0] == 'b') {
+                printf("Found: %s\n", line);
+                cont = false;
+                break;
+            }
+
+            line = strtok(NULL, "\n");
+        }
+    }
+
+    kill_ipc(&sub);
 }

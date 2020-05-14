@@ -1,6 +1,6 @@
 #include "chess-handicap.h"
 
-void ipc(char *proc, ipc_handler handler) {
+void load_ipc(char *proc, subproc *sub) {
     int fds[4];
     pipe(&fds[0]);
     pipe(&fds[2]);
@@ -18,13 +18,14 @@ void ipc(char *proc, ipc_handler handler) {
     close(fds[2]);
     close(fds[1]);
 
-    subproc sub;
-    sub.in = fds[0];
-    sub.out = fds[3];
-    handler(sub);
+    sub->in  = fds[0];
+    sub->out = fds[3];
+    sub->pid = pid;
+}
 
-    kill(pid, SIGKILL);
-    waitpid(pid, NULL, 0);
+void kill_ipc(subproc *sub) {
+    kill(sub->pid, SIGKILL);
+    waitpid(sub->pid, NULL, 0);
 }
 
 void send(subproc sub, char *msg) {
