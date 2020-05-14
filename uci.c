@@ -3,7 +3,6 @@
 void uci_interface(subproc sub) {
     char *msg = NULL;
 
-    send(sub, "");
     recv(sub, &msg);
     send(sub, "uci\n");
     recv(sub, &msg);
@@ -13,14 +12,19 @@ void uci_interface(subproc sub) {
     send(sub, "position startpos\n");
     send(sub, "go\n");
 
-    while(true) {
+    bool cont = true;
+    while(cont) {
         recv(sub, &msg);
-        if(msg[0] != 'b') {
-            continue;
-        }
+        char *line = strtok(msg, "\n");
+        while(line != NULL) {
+            if(line[0] == 'b') {
+                printf("Found: %s\n", line);
+                cont = false;
+                break;
+            }
 
-        printf("Result: %s\n", msg);
-        break;
+            line = strtok(NULL, "\n");
+        }
     }
 
     // try this out
