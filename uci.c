@@ -1,7 +1,7 @@
 #include "chess-handicap.h"
 
 void uci_init(subproc *uci) {
-    char *_t;
+    char *_t = NULL;
 
     recv(uci, &_t);
     send(uci, "uci\n");
@@ -27,9 +27,10 @@ void uci_load_pos(subproc *uci, game *g) {
 }
 
 void uci_read_info(subproc *uci, info_block *b) {
+    char *buf = NULL;
+
     bool done = false;
     while(!done) {
-        char *buf;
         recv(uci, &buf);
 
         char *tok = strtok(buf, " \n");
