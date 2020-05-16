@@ -3,23 +3,28 @@
 
 #include "chess-handicap.h"
 
-#define BUF_SIZE 256
+typedef struct {
+    char *cp;
+    bool mate;
+    char *move;
+} info_block;
+void uci_read_info(subproc *uci, info_block *b);
 
 typedef struct {
     char *fen;
     char moves[256][6];
-    size_t size;
+    size_t n_moves;
 } game;
-void game_init(game *g, char *fen) {
-    g->fen = fen;
-    g->size = 0;
-}
+void game_init(game *g, char *fen);
+void game_play(game *g, char *move);
 
+/**
+ * k and v are pointers to array of strings.
+ *
+ * Returns once a value has been found for every key.
+ */
+void uci_read(subproc *uci, char ***k, char ***v);
 
-void movelist_add(movelist *list, char *move) {
-
-}
-
-void init_uci(subproc *sub);
+void uci_init(subproc *sub);
 
 #endif

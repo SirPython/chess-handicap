@@ -3,6 +3,8 @@
 
 #include "chess-handicap.h"
 
+#define BUF_SIZE 256
+
 typedef struct {
     int in;
     int out;

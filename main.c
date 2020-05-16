@@ -16,47 +16,24 @@ int main(int argc, char **argv) {
 
     char moves[256][6];
     int n_moves = 0;
+    game g;
+    init_game(&g);
 
-    bool whitewins = true;
+    info_block info;
+    uci_read_info(&uci, &info);
 
-    bool ended = false;
-    while(!ended) {
-        white = !white;
-
-        uci_load_pos(argv[1], moves, n_moves);
-
-        uci_calc(&uci);
-
-        bool cont = true;
-        while(cont) {
-            recv(&uci, &msg);
-            char *tok = strtok(msg, " \n");
-            while(tok != NULL) {
-                if(line[0] == 'b') {
-                    memcpy(moves + (n_moves), line + 9, 5);
-                    moves[n_moves++][5] = '\0';
-
-                    if(moves[n_moves-1][0] == '(') {
-                        ended = true;
-                    }
-                    cont = false;
-                    break;
-                }
-
-                if(strcmp(tok, "score")) {
-
-                }
-
-                tok = strtok(NULL, "\n");
-            }
+    while(true) {
+        if(info.mate) {
+            printf("%s won.\n", g->n_moves % 2 == 0 ? "White" : "Black");
+            break;
+        } else
+        if(info.cp[0] == '0' && info.move[0] == '(') { /* A draw was reached. */
+            puts("It's a draw.");
+            break;
         }
+        
+        game_play(&g, info.move);
     }
-
-    for(int i = 0; i < n_moves; i++) {
-        printf("%s\n", moves[i]);
-    }
-
-    printf("%s won.\n", whitewins ? "White" : "Black");
 
     kill_ipc(&uci);
 }
