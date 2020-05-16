@@ -11,27 +11,24 @@
 int main(int argc, char **argv) {
     subproc uci;
     load_ipc(argv[1], &uci);
-
     uci_init(&uci);
 
-    char moves[256][6];
-    int n_moves = 0;
     game g;
-    init_game(&g);
+    game_init(&g, argv[2]);
 
     info_block info;
+    uci_calc(&uci);
     uci_read_info(&uci, &info);
-
     while(true) {
         if(info.mate) {
-            printf("%s won.\n", g->n_moves % 2 == 0 ? "White" : "Black");
+            printf("%s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
             break;
         } else
         if(info.cp[0] == '0' && info.move[0] == '(') { /* A draw was reached. */
             puts("It's a draw.");
             break;
         }
-        
+
         game_play(&g, info.move);
     }
 

@@ -23,8 +23,7 @@ void game_play(game *g, char *move);
  *
  * Returns once a value has been found for every key.
  */
-void uci_read(subproc *uci, char ***k, char ***v);
-
+void uci_calc(subproc *uci);
 void uci_init(subproc *sub);
 
 #endif

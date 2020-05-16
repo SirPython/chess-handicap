@@ -1,19 +1,5 @@
 #include "chess-handicap.h"
 
-void uci_read(subproc *uci, char **k, char ***v) {
-    while(true) {
-        char *buf;
-        recv(uci, *buf);
-
-        char *tok = strtok(buf, " \n");
-        while(tok != NULL) {
-            for(int i, )
-
-            tok = strtok(NULL, " \n");
-        }
-    }
-}
-
 void uci_init(subproc *uci) {
     char *_t;
 
@@ -31,7 +17,7 @@ void uci_calc(subproc *uci) {
 
 void uci_load_pos(subproc *uci, game *g) {
     send(uci, "position fen ");
-    send(uci, fen);
+    send(uci, g->fen);
     send(uci, " moves ");
     for(int i = 0; i < g->n_moves; i++ ) {
         send(uci, g->moves[i]);
@@ -43,7 +29,7 @@ void uci_load_pos(subproc *uci, game *g) {
 void uci_read_info(subproc *uci, info_block *b) {
     bool done = false;
     while(!done) {
-        char *buf
+        char *buf;
         recv(uci, &buf);
 
         char *tok = strtok(buf, " \n");
