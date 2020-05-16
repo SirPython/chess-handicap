@@ -1,34 +1,49 @@
 #include "chess-handicap.h"
 
-void uci_interface(subproc sub) {
-    char *msg = NULL;
+void uci_init(subproc *uci) {
+    char *_t;
 
-    recv(sub, &msg);
-    send(sub, "uci\n");
-    recv(sub, &msg);
-    send(sub, "isready\n");
-    recv(sub, &msg);
-    send(sub, "ucinewgame\n");
-    send(sub, "position startpos\n");
-    send(sub, "go\n");
+    recv(uci, &_t);
+    send(uci, "uci\n");
+    recv(uci, &_t);
+    send(uci, "isready\n");
+    recv(uci, &_t);
+    send(uci, "ucinewgame\n");
+}
 
-    bool cont = true;
-    while(cont) {
-        recv(sub, &msg);
-        char *line = strtok(msg, "\n");
-        while(line != NULL) {
-            if(line[0] == 'b') {
-                printf("Found: %s\n", line);
-                cont = false;
-                break;
-            }
+void uci_calc(subproc *uci) {
+    send(uci, "go");
+}
 
-            line = strtok(NULL, "\n");
-        }
+void uci_load_pos(subproc *uci, char *fen, char **moves, int n_moves) {
+    send(uci, "position fen ");
+    send(uci, fen);
+    send(uci, " moves ");
+    for(int i = 0; i < n_moves; i++ ) {
+        send(uci, moves[i]);
+        send(uci, " ");
+    }
+    send(uci, "\n");
+}
+
+void uci_read_info(subproc *uci, char **info) {
+    if(*info != NULL) {
+        free(*info);
+        *info = NULL;
     }
 
-    // try this out
-    // maybe the engines can predict the odds from the beginning
-    // have them play some games and see if the odds line up
-    // if they do, then you don't need the engines to play a game to determine the odds
+    bool done = false;
+    while(!done) {
+        char *buf;
+        recv(uci, &buf);
+
+        char *line = strtok(buf, "\n");
+        while(line != NULL) {
+            if(line[0] == 'b') {
+                done = true;
+            }
+        }
+
+        
+    }
 }

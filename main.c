@@ -9,34 +9,54 @@
  */
 
 int main(int argc, char **argv) {
-    subproc sub;
-    load_ipc(argv[1], &sub);
+    subproc uci;
+    load_ipc(argv[1], &uci);
 
-    char *msg = NULL;
+    uci_init(&uci);
 
-    recv(sub, &msg);
-    send(sub, "uci\n");
-    recv(sub, &msg);
-    send(sub, "isready\n");
-    recv(sub, &msg);
-    send(sub, "ucinewgame\n");
-    send(sub, "position startpos\n");
-    send(sub, "go\n");
+    char moves[256][6];
+    int n_moves = 0;
 
-    bool cont = true;
-    while(cont) {
-        recv(sub, &msg);
-        char *line = strtok(msg, "\n");
-        while(line != NULL) {
-            if(line[0] == 'b') {
-                printf("Found: %s\n", line);
-                cont = false;
-                break;
+    bool whitewins = true;
+
+    bool ended = false;
+    while(!ended) {
+        white = !white;
+
+        uci_load_pos(argv[1], moves, n_moves);
+
+        uci_calc(&uci);
+
+        bool cont = true;
+        while(cont) {
+            recv(&uci, &msg);
+            char *tok = strtok(msg, " \n");
+            while(tok != NULL) {
+                if(line[0] == 'b') {
+                    memcpy(moves + (n_moves), line + 9, 5);
+                    moves[n_moves++][5] = '\0';
+
+                    if(moves[n_moves-1][0] == '(') {
+                        ended = true;
+                    }
+                    cont = false;
+                    break;
+                }
+
+                if(strcmp(tok, "score")) {
+
+                }
+
+                tok = strtok(NULL, "\n");
             }
-
-            line = strtok(NULL, "\n");
         }
     }
 
-    kill_ipc(&sub);
+    for(int i = 0; i < n_moves; i++) {
+        printf("%s\n", moves[i]);
+    }
+
+    printf("%s won.\n", whitewins ? "White" : "Black");
+
+    kill_ipc(&uci);
 }

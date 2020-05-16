@@ -28,14 +28,11 @@ void kill_ipc(subproc *sub) {
     waitpid(sub->pid, NULL, 0);
 }
 
-void send(subproc sub, char *msg) {
-    if(msg[strlen(msg) - 1] != '\n') {
-        puts("Warning: no newline");
-    }
-    write(sub.out, msg, strlen(msg));
+void send(subproc *sub, char *msg) {
+    write(sub->out, msg, strlen(msg));
 }
 
-void recv(subproc sub, char **msg) {
+void recv(subproc *sub, char **msg) {
     if(*msg != NULL) {
         free(*msg);
         *msg = NULL;
@@ -44,7 +41,7 @@ void recv(subproc sub, char **msg) {
     char buf[BUF_SIZE];
     size_t n_read, total_read = 0;
     do {
-        n_read = read(sub.in, &buf, BUF_SIZE);
+        n_read = read(sub->in, &buf, BUF_SIZE);
 
         *msg = realloc(*msg, total_read + n_read);
         memcpy(*msg + total_read, buf, n_read);

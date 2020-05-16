@@ -17,8 +17,8 @@ typedef void (*ipc_handler)(subproc);
 void load_ipc(char *proc, subproc *sub);
 void kill_ipc(subproc *sub);
 
-void send(subproc sub, char *msg);
-void recv(subproc sub, char **msg);
+void send(subproc *sub, char *msg);
+void recv(subproc *sub, char **msg);
 
 
 #endif
