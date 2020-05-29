@@ -3,9 +3,12 @@
 void uci_init(subproc uci) {
     char *_t = NULL;
 
-    recv(uci, &_t);
+    //recv(uci, &_t);
     send(uci, "uci\n");
     recv(uci, &_t);
+    send(uci, "setoption name UCI_LimitStrength value true\n");
+    send(uci, "setoption name UCI_Elo value 2850\n");
+    send(uci, "setoption name Skill Level value 20\n");
     send(uci, "isready\n");
     recv(uci, &_t);
     send(uci, "ucinewgame\n");
@@ -38,7 +41,7 @@ void uci_read_info(subproc uci, info_block *b) {
                 memcpy(b->move, line + 9, 5);
                 b->move[6] = '\0';
 
-                char *tok = strtok(last, "\n");
+                char *tok = strtok(last, " ");
                 while(tok != NULL) {
                     if(strcmp(tok, "cp") == 0) {
                         b->cp = strtol(strtok(NULL, " "), NULL, 10);
@@ -47,7 +50,7 @@ void uci_read_info(subproc uci, info_block *b) {
                         b->mate = true;
                     }
 
-                    tok = strtok(NULL, " \n");
+                    tok = strtok(NULL, " ");
                 }
 
                 done = true;

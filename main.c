@@ -16,24 +16,28 @@ int main(int argc, char **argv) {
 
     subproc uci;
     load_ipc(argv[1], &uci);
-    uci_init(uci);
 
-    game g;
-    game_init(&g, argv[2]);
+    for(int i = 0; i < 1; i++) {
+        uci_init(uci);
 
-    info_block info;
-    while(true) {
-        uci_calc(uci, g);
-        uci_read_info(uci, &info);
-        if(info.mate) {
-            printf("%s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
-            break;
-        } else
-        if(info.cp == 0 && info.move[0] == '(') { /* A draw was reached. */
-            puts("It's a draw.");
-            break;
+        game g;
+        game_init(&g, argv[2]);
+
+        info_block info;
+        while(true) {
+            uci_calc(uci, g);
+            uci_read_info(uci, &info);
+            if(info.mate) {
+                printf("%s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
+                break;
+            } else
+            if(info.cp == 0 && info.move[0] == '(') { /* A draw was reached. */
+                puts("It's a draw.");
+                break;
+            }
+
+            game_play(&g, info.move);
         }
-        game_play(&g, info.move);
     }
 
     kill_ipc(uci);
