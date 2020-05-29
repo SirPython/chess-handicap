@@ -33,8 +33,6 @@ int main(int argc, char **argv) {
             puts("It's a draw.");
             break;
         }
-
-        printf("Playing %zu move: %s\n", g.n_moves, info.move);
         game_play(&g, info.move);
     }
 

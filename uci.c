@@ -15,15 +15,12 @@ void uci_calc(subproc uci, game g) {
     send(uci, "position fen ");
     send(uci, g.fen);
     send(uci, " moves ");
-    printf("\nSending moves: ");
     for(int i = 0; i < g.n_moves; i++ ) {
 
         send(uci, g.moves[i]);
         send(uci, " ");
-        printf("%s ", g.moves[i]);
     }
     send(uci, "\ngo\n");
-    printf("\n");
 }
 
 void uci_read_info(subproc uci, info_block *b) {
@@ -37,7 +34,6 @@ void uci_read_info(subproc uci, info_block *b) {
         char *line = strtok(buf, "\n");
         while(line != NULL) {
             if(line[0] == 'b') {
-                //printf("\nline: %s\nlast:%s\n", line, last);
                 b->move = malloc(5 + 1);
                 memcpy(b->move, line + 9, 5);
                 b->move[6] = '\0';
