@@ -50,7 +50,7 @@ void uci_read_info(subproc uci, info_block *b) {
                     } else
                     if(strcmp(tok, "mate") == 0) {
                         tok = strtok(NULL, " ");
-                        if(strtol(tok, NULL, 10) == 1) {
+                        if(strtol(tok, NULL, 10) > 0) {
                             b->mate = true;
                         }
                     }
