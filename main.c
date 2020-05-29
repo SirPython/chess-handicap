@@ -28,14 +28,15 @@ int main(int argc, char **argv) {
             uci_calc(uci, g);
             uci_read_info(uci, &info);
             if(info.mate) {
-                printf("%s won.\n", g.n_moves % 2 == 0 ? "Black" : "White");
+                printf("***** %s won.\n", g.n_moves % 2 == 0 ? "Black" : "White");
                 break;
             } else
             if(info.cp == 0 && info.move[0] == '(') { /* A draw was reached. */
-                puts("It's a draw.");
+                puts("***** It's a draw.");
                 break;
             }
 
+            printf("%s is playing %s\n", g.n_moves % 2 == 0 ? "Black" : "White", info.move);
             game_play(&g, info.move);
         }
 
