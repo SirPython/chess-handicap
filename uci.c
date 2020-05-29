@@ -1,6 +1,6 @@
 #include "chess-handicap.h"
 
-void uci_init(subproc *uci) {
+void uci_init(subproc uci) {
     char *_t = NULL;
 
     recv(uci, &_t);
@@ -11,27 +11,26 @@ void uci_init(subproc *uci) {
     send(uci, "ucinewgame\n");
 }
 
-void uci_calc(subproc *uci) {
-    send(uci, "go");
-}
-
-void uci_load_pos(subproc *uci, game *g) {
+void uci_calc(subproc uci, game g) {
     send(uci, "position fen ");
-    send(uci, g->fen);
+    send(uci, g.fen);
     send(uci, " moves ");
-    for(int i = 0; i < g->n_moves; i++ ) {
-        send(uci, g->moves[i]);
+    for(int i = 0; i < g.n_moves; i++ ) {
+        send(uci, g.moves[i]);
         send(uci, " ");
     }
-    send(uci, "\n");
+    send(uci, "\ngo\n");
 }
 
-void uci_read_info(subproc *uci, info_block *b) {
+void uci_read_info(subproc uci, info_block *b) {
     char *buf = NULL;
 
     bool done = false;
     while(!done) {
         recv(uci, &buf);
+
+        // optimize: read every line until you get a 'b'; the prior line
+        // has the score info, the 'b' line has the move info
 
         char *tok = strtok(buf, " \n");
         while(tok != NULL) {
@@ -58,5 +57,5 @@ void game_init(game *g, char *fen) {
 }
 void game_play(game *g, char *move) {
     memcpy(g->moves[g->n_moves], move, 5);
-    g->n_moves = g->n_moves++;
+    g->n_moves = g->n_moves + 1;
 }

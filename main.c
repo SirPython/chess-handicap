@@ -11,15 +11,15 @@
 int main(int argc, char **argv) {
     subproc uci;
     load_ipc(argv[1], &uci);
-    uci_init(&uci);
+    uci_init(uci);
 
     game g;
     game_init(&g, argv[2]);
 
     info_block info;
-    uci_calc(&uci);
-    uci_read_info(&uci, &info);
     while(true) {
+        uci_calc(uci, g);
+        uci_read_info(uci, &info);
         if(info.mate) {
             printf("%s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
             break;
@@ -29,8 +29,9 @@ int main(int argc, char **argv) {
             break;
         }
 
+        printf("Playing %zu move: %s\n", g.n_moves, info.move);
         game_play(&g, info.move);
     }
 
-    kill_ipc(&uci);
+    kill_ipc(uci);
 }

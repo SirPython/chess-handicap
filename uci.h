@@ -8,7 +8,8 @@ typedef struct {
     bool mate;
     char *move;
 } info_block;
-void uci_read_info(subproc *uci, info_block *b);
+void uci_read_info(subproc uci, info_block *b);
+void uci_init(subproc uci);
 
 typedef struct {
     char *fen;
@@ -18,12 +19,6 @@ typedef struct {
 void game_init(game *g, char *fen);
 void game_play(game *g, char *move);
 
-/**
- * k and v are pointers to array of strings.
- *
- * Returns once a value has been found for every key.
- */
-void uci_calc(subproc *uci);
-void uci_init(subproc *sub);
+void uci_calc(subproc uci, game g);
 
 #endif
