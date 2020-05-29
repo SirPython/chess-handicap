@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
             printf("%s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
             break;
         } else
-        if(info.cp[0] == '0' && info.move[0] == '(') { /* A draw was reached. */
+        if(info.cp == 0 && info.move[0] == '(') { /* A draw was reached. */
             puts("It's a draw.");
             break;
         }
