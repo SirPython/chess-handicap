@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
     double white_score = 0.0;
     for(int i = 0; i < n_games; i++) {
         white_score += run_game(uci, argv[2]);
+        printf("%d games complete out of %ld\n", i+1, n_games);
     }
 
     printf("White's score: %.2f/%ld\n", white_score, n_games);
