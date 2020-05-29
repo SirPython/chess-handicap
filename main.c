@@ -37,7 +37,8 @@ double run_game(subproc uci, char *fen) {
         uci_calc(uci, g);
         uci_read_info(uci, &info);
         if(info.mate) {
-            ret = g.n_moves % 2 == 0 ? 0.0 : 1.0;
+            ret = g.n_moves % 2 == 0 ? 1.0 : 0.0;
+            printf("==== %s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
             break;
         } else
         if(info.cp == 0 && info.move[0] == '(') { /* A draw was reached. */
@@ -45,6 +46,7 @@ double run_game(subproc uci, char *fen) {
             break;
         }
 
+        printf("Move: %s\n", info.move);
         game_play(&g, info.move);
     }
 
@@ -53,6 +55,8 @@ double run_game(subproc uci, char *fen) {
     info.cp = 0;
     info.mate = false;
     free(info.move);
+
+    puts("********************************");
 
     return ret;
 }

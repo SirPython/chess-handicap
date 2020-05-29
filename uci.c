@@ -41,17 +41,24 @@ void uci_read_info(subproc uci, info_block *b) {
                 memcpy(b->move, line + 9, 5);
                 b->move[6] = '\0';
 
-                char *tok = strtok(last, " ");
+                printf("%s\n", last);
+
+                char *tok = strtok(last, " "); // this is a lame way to do this... there is string searching...
                 while(tok != NULL) {
                     if(strcmp(tok, "cp") == 0) {
                         b->cp = strtol(strtok(NULL, " "), NULL, 10);
                     } else
                     if(strcmp(tok, "mate") == 0) {
-                        b->mate = true;
+                        tok = strtok(NULL, " ");
+                        if(strtol(tok, NULL, 10) == 1) {
+                            b->mate = true;
+                        }
                     }
 
                     tok = strtok(NULL, " ");
                 }
+
+
 
                 done = true;
                 break;
