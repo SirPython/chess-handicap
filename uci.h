@@ -4,7 +4,7 @@
 #include "chess-handicap.h"
 
 typedef struct {
-    char *cp;
+    long cp;
     bool mate;
     char *move;
 } info_block;

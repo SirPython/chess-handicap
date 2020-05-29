@@ -24,29 +24,38 @@ void uci_calc(subproc uci, game g) {
 
 void uci_read_info(subproc uci, info_block *b) {
     char *buf = NULL;
+    char *last = NULL;
 
     bool done = false;
     while(!done) {
         recv(uci, &buf);
 
-        // optimize: read every line until you get a 'b'; the prior line
-        // has the score info, the 'b' line has the move info
+        char *line = strtok(buf, "\n");
+        while(line != NULL) {
+            if(line[0] == 'b') {
+                b->move = malloc(5 + 1);
+                memcpy(b->move, line + 9, 5);
+                b->move[6] = '\0';
 
-        char *tok = strtok(buf, " \n");
-        while(tok != NULL) {
-            if(strcmp(tok, "cp") == 0) {
-                b->cp = strtok(NULL, " \n");
-            } else
-            if(strcmp(tok, "mate") == 0) {
-                b->mate = true;
+                char *tok = strtok(last, "\n");
+                while(tok != NULL) {
+                    if(strcmp(tok, "cp") == 0) {
+                        b->cp = strtol(strtok(NULL, " "), NULL, 10);
+                    } else
+                    if(strcmp(tok, "mate") == 0) {
+                        b->mate = true;
+                    }
+
+                    tok = strtok(NULL, " \n");
+                }
+
                 done = true;
-            } else
-            if(strcmp(tok, "bestmove")) {
-                b->move = strtok(NULL, " \n");
-                done = true;
+                break;
+            } else {
+                last = line;
             }
 
-            tok = strtok(NULL, " \n");
+            line = strtok(NULL, "\n");
         }
     }
 }

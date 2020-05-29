@@ -9,6 +9,11 @@
  */
 
 int main(int argc, char **argv) {
+    if(argc < 3) {
+        printf("Use: %s [path to UCI engine] [starting position in FEN string]\n", argv[0]);
+        return 1;
+    }
+
     subproc uci;
     load_ipc(argv[1], &uci);
     uci_init(uci);
@@ -34,4 +39,5 @@ int main(int argc, char **argv) {
     }
 
     kill_ipc(uci);
+    return 0;
 }
