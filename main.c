@@ -14,12 +14,12 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    subproc uci;
-    load_ipc(argv[1], &uci);
+
 
     for(int i = 0; i < 1; i++) {
+        subproc uci;
+        load_ipc(argv[1], &uci);
         uci_init(uci);
-
         game g;
         game_init(&g, argv[2]);
 
@@ -38,8 +38,10 @@ int main(int argc, char **argv) {
 
             game_play(&g, info.move);
         }
+
+        kill_ipc(uci);
     }
 
-    kill_ipc(uci);
+
     return 0;
 }
