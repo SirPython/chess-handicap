@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 
 
 
-    for(int i = 0; i < 1; i++) {
+    for(int i = 0; i < 10; i++) {
         subproc uci;
         load_ipc(argv[1], &uci);
         uci_init(uci);
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
             uci_calc(uci, g);
             uci_read_info(uci, &info);
             if(info.mate) {
-                printf("%s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
+                printf("%s won.\n", g.n_moves % 2 == 0 ? "Black" : "White");
                 break;
             } else
             if(info.cp == 0 && info.move[0] == '(') { /* A draw was reached. */
