@@ -18,10 +18,9 @@ int main(int argc, char **argv) {
         printf("%d games complete out of %ld\n", i+1, n_games);
     }
 
-    printf("White's score: %.2f/%ld\n", white_score, n_games);
+    printf("White's score: %.2f/%ld\nOdds = %d%%\n", white_score, n_games, (int)(white_score / (n_games / 2) * 100));
 
     kill_ipc(uci);
-
     return 0;
 }
 
@@ -34,11 +33,19 @@ double run_game(subproc uci, char *fen) {
 
     info_block info;
     while(true) {
+        /* This program doesn't keep track of board state so it cannot detect
+         * three-fold repetitions, and neither can the engines. */
+        // TODO: Try to find a way to get the engine to play a full game, and
+        // not think of the positions individually.
+        if(g.n_moves == MAX_MOVES) {
+            ret = 0.5;
+            break;
+        }
+
         uci_calc(uci, g);
         uci_read_info(uci, &info);
         if(info.mate) {
             ret = g.n_moves % 2 == 0 ? 1.0 : 0.0;
-            printf("==== %s won.\n", g.n_moves % 2 == 0 ? "White" : "Black");
             break;
         } else
         if(info.cp == 0 && info.move[0] == '(') { /* A draw was reached. */
@@ -46,7 +53,6 @@ double run_game(subproc uci, char *fen) {
             break;
         }
 
-        printf("Move: %s\n", info.move);
         game_play(&g, info.move);
     }
 
@@ -55,8 +61,6 @@ double run_game(subproc uci, char *fen) {
     info.cp = 0;
     info.mate = false;
     free(info.move);
-
-    puts("********************************");
 
     return ret;
 }

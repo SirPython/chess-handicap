@@ -3,6 +3,8 @@
 
 #include "chess-handicap.h"
 
+#define MAX_MOVES 512
+
 typedef struct {
     long cp;
     bool mate;
@@ -13,7 +15,7 @@ void uci_init(subproc uci);
 
 typedef struct {
     char *fen;
-    char moves[256][6];
+    char moves[MAX_MOVES][6];
     size_t n_moves;
 } game;
 void game_init(game *g, char *fen);

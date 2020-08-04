@@ -19,7 +19,6 @@ void uci_calc(subproc uci, game g) {
     send(uci, g.fen);
     send(uci, " moves ");
     for(int i = 0; i < g.n_moves; i++ ) {
-
         send(uci, g.moves[i]);
         send(uci, " ");
     }
@@ -40,8 +39,6 @@ void uci_read_info(subproc uci, info_block *b) {
                 b->move = malloc(5 + 1);
                 memcpy(b->move, line + 9, 5);
                 b->move[6] = '\0';
-
-                printf("%s\n", last);
 
                 char *tok = strtok(last, " "); // this is a lame way to do this... there is string searching...
                 while(tok != NULL) {
